@@ -5,7 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
+#include "MovePE.h"
 #include "ProyectilE.generated.h"
+
 
 
 DECLARE_DELEGATE(FProyectileE)
@@ -17,6 +19,9 @@ class STARFIGHTER_API AProyectilE : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AProyectilE();
+	
+	UPROPERTY()
+		int identificadorP;
 
 	UPROPERTY()
 		UStaticMeshComponent* My_Mesh;
@@ -24,6 +29,12 @@ public:
 		FProyectileE Recarga;
 
 		UBoxComponent* TriggerZone;
+
+		UMovePE* MyMove;
+
+		UFUNCTION()
+			void SetIdentifi(int IDPadre);
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -35,5 +46,9 @@ public:
 
 
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+
+
+	
+	int PlayerId;
 
 };

@@ -8,6 +8,7 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "UObject/UObjectBase.h"
 
 #include <string>
 #include <iterator>
@@ -88,6 +89,9 @@ void ANaveAereaJugador::BeginPlay()
 	UWorld* TheWorld = GetWorld();
 	NaveJ = GetOwner();
 
+	PlayerID = GetUniqueID();
+	
+
 	if (TheWorld != nullptr)
 	{
 
@@ -97,9 +101,13 @@ void ANaveAereaJugador::BeginPlay()
 		
 			MyGameMode->MyInventoryDelegate.BindUObject(this, &ANaveAereaJugador::CapsuleNave);
 
+			MyGameMode->MyGetID.ExecuteIfBound(PlayerID);
+
 		}
 
 	}
+
+	
 }
 
 
@@ -124,20 +132,20 @@ void ANaveAereaJugador::Tick(float DeltaSeconds)
 {
 	
 	
-	elapseseconds += (DeltaSeconds * 60);
-	if (elapseseconds > 180)
-	{
+	//elapseseconds += (DeltaSeconds * 60);
+	//if (elapseseconds > 180)
+	//{
 	
-		elapseseconds -= 180;
+		//elapseseconds -= 180;
 		
 	
 		
-		Ejex = NaveJ->GetActorLocation().X;
-		Ejey = NaveJ->GetActorLocation().Y;
+		Ejex = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation().X;
+		Ejey = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation().Y;
 	
 		Objetivo.Broadcast(Ejex, Ejey);
 	
-	}
+	//}
 	
 	//UE_LOG(LogTemp, Warning, TEXT("Location: %s."), *Location.ToString());
 	// Find movement direction
@@ -286,6 +294,18 @@ void ANaveAereaJugador::NotifyHit(class UPrimitiveComponent* MyComp, AActor* Oth
 
 		
 	}
+}
+
+void ANaveAereaJugador::pruevafuncion(FString dato)
+{
+
+	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Red, FString::Printf(TEXT("%s "), *dato));
+
+}
+
+int ANaveAereaJugador::GetIdPlayer()
+{
+	return GetUniqueID();
 }
 
 void ANaveAereaJugador::CapsuleNave(FString llave, int valor)

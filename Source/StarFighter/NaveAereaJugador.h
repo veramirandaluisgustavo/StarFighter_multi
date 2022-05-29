@@ -99,6 +99,12 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
+
+
+	UFUNCTION()
+
+		void pruevafuncion(FString dato);
+
 private:
 
 	/* Flag to control firing  */
@@ -111,5 +117,10 @@ private:
 	float FireRightValue;
 	int salud;
 	float elapseseconds;
+
+	int PlayerID;
+
+
+	int GetIdPlayer();
 
 };

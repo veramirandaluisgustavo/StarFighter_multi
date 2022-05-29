@@ -59,8 +59,7 @@ void APickup::NotifyActorBeginOverlap(AActor* OtherActor)
 	
 
 	OnPickedUp.ExecuteIfBound();
-	float vel = movercuboComponent->GetVelocidad();
-	movercuboComponent->SetVelocidad(1);
+	
 	//string String = static_cast<ostringstream*>(&(ostringstream() << vel))->str();
 
 

@@ -3,6 +3,10 @@
 
 #include "ProyectilE.h"
 #include "UObject/ConstructorHelpers.h"
+#include "UObject/UObjectBaseUtility.h"
+#include "StarFighterGameModeBase.h"
+#include "Kismet/GamePlayStatics.h"
+
 
 // Sets default values
 AProyectilE::AProyectilE()
@@ -10,11 +14,12 @@ AProyectilE::AProyectilE()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-
+	MyMove = CreateDefaultSubobject<UMovePE>("MiMovimiento");
 
 	TriggerZone = CreateDefaultSubobject<UBoxComponent>("TriggerZone");
 
 	TriggerZone->SetBoxExtent(FVector(50, 50, 50));
+	identificadorP = 0;
 
 
 
@@ -28,10 +33,21 @@ AProyectilE::AProyectilE()
 	My_Mesh->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 }
 
+void AProyectilE::SetIdentifi(int IDPadre)
+{
+
+	identificadorP = IDPadre;
+
+}
+
 // Called when the game starts or when spawned
 void AProyectilE::BeginPlay()
 {
 	Super::BeginPlay();
+
+	
+
+
 	
 }
 
@@ -45,6 +61,28 @@ void AProyectilE::Tick(float DeltaTime)
 void AProyectilE::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 
+	PlayerId=OtherActor->GetUniqueID();
+	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Black, FString::Printf(TEXT("Mi Player es = %i "), PlayerId));
+
+	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Red, FString::Printf(TEXT("Mi padre es=%i "),identificadorP ));
+
+
 	Recarga.ExecuteIfBound();
+
+
+	/*UWorld* TheWorld = GetWorld();
+
+	if (TheWorld != nullptr)
+	{
+
+		AGameModeBase* GameMode = UGameplayStatics::GetGameMode(TheWorld);
+		AStarFighterGameModeBase* MyGameMode = Cast<AStarFighterGameModeBase>(GameMode);
+		if (MyGameMode != nullptr) {
+
+			MyGameMode->EnemiGetId.ExecuteIfBound(identificadorP,PlayerId);
+
+		}
+
+	}*/
 }
 

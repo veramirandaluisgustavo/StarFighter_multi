@@ -12,6 +12,9 @@
 
 DECLARE_DELEGATE(FDelegateDestructor)
 DECLARE_DELEGATE_TwoParams(FDelegateInventory, FString, int)
+DECLARE_DELEGATE_OneParam(FDelegatedata,int)
+DECLARE_DELEGATE_OneParam(FDelegateEnemiRegistro, int)
+DECLARE_DELEGATE_TwoParams(FDelegateparamdata,int,int)
 
 UCLASS()
 class STARFIGHTER_API AStarFighterGameModeBase : public AGameModeBase
@@ -29,8 +32,11 @@ public:
 	T SpawnNave();
 
 	FDelegateInventory MyInventoryDelegate;
-
+	//FDelegateInventory MyPrueva;
 	FDelegateDestructor MyDestructorDelegate;
+	FDelegateparamdata EnemiGetId;
+	FDelegatedata MyGetID;
+	FDelegateEnemiRegistro MyGetIDRegister;
 };
 
 template<typename T>

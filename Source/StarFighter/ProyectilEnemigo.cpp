@@ -3,6 +3,9 @@
 
 #include "ProyectilEnemigo.h"
 #include "NaveAereaJugador.h"
+#include "Components/SceneComponent.h"
+#include "UObject/UObjectBase.h"
+#include "StarFighterGameModeBase.h"
 //#include "DianaO.h"
 #include "Kismet/GamePlayStatics.h"
 
@@ -15,6 +18,7 @@ AProyectilEnemigo::AProyectilEnemigo()
 	
 	My_mesh = CreateDefaultSubobject<UStaticMeshComponent>("MYMESH");
 	SpawnLocation = CreateDefaultSubobject<USceneComponent>("SpawnLocation");
+	MoveRandom = CreateAbstractDefaultSubobject<UMoveP>("MoveAleatorio");
 
 	auto MeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Meshes/SM_Pixel_Enemy_1.SM_Pixel_Enemy_1'"));
 
@@ -27,14 +31,16 @@ AProyectilEnemigo::AProyectilEnemigo()
 	
 	RootComponent = SpawnLocation;
 	My_mesh->AttachTo(SpawnLocation);
+	//MoveRandom->AttachTo(SpawnLocation);
 
 	//My_mesh->SetRelativeTransform(FTransform(FRotator(0, 90, -90)));
 	My_mesh->SetRelativeTransform(FTransform(FRotator(0, 90, -90),FVector(-100,0,0)));
-	DireccionGrados = 0;
+	
 	Direccionx = 0;
 	Direcciony = 0;
+	DireccionGrados=0;
 
-	
+	SetActorEnableCollision(false);
 }
 
 
@@ -42,9 +48,20 @@ AProyectilEnemigo::AProyectilEnemigo()
 void AProyectilEnemigo::BeginPlay()
 {
 	Super::BeginPlay();
+	
+
+	
+	MyID = GetUniqueID();
+
+
+	MiPosi = GetOwner();
+
 
 	SpawnP_E();
-	MiPosi = GetOwner();
+	
+	CurrentP_E->SetIdentifi(MyID);
+
+	P_ECollected();
 
 	TArray<AActor*>Apuntadores;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ANaveAereaJugador::StaticClass(), Apuntadores);
@@ -54,6 +71,22 @@ void AProyectilEnemigo::BeginPlay()
 		MyObjetivo = apuntador->Objetivo.AddUObject(this, &AProyectilEnemigo::ApuntarEnemigo);
 
 	};
+
+
+	UWorld* TheWorld = GetWorld();
+
+	if (TheWorld != nullptr)
+	{
+
+		AGameModeBase* GameMode = UGameplayStatics::GetGameMode(TheWorld);
+		AStarFighterGameModeBase* MyGameMode = Cast<AStarFighterGameModeBase>(GameMode);
+		if (MyGameMode != nullptr) {
+
+			MyGameMode->MyGetIDRegister.ExecuteIfBound(MyID);
+
+		}
+
+	}
 
 	//UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADianaO::StaticClass(), Apuntadores);
 	//if (Apuntadores.Num() != 0) {
@@ -69,20 +102,28 @@ void AProyectilEnemigo::BeginPlay()
 void AProyectilEnemigo::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	/*DireccionGrados += 90;
-
-	if (DireccionGrados > 360) {
-
-		DireccionGrados -= 360;
-	}
 	
-	My_mesh->SetRelativeTransform(FTransform(FRotator(0, DireccionGrados, -90), FVector(-100, 0, 0)));*/
+	
+	My_mesh->SetRelativeTransform(FTransform(FRotator(0, (DireccionGrados*-1)+180, -90), FVector(100,100, 100)));
+
+	//GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Red, FString::Printf(TEXT("%i "), DireccionGrados));
+
+	elapseseconds += (DeltaTime * 60);
+	if (elapseseconds > 180)
+	{
+		elapseseconds -= 180;
+
+		GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Blue, FString::Printf(TEXT("%f "), DireccionGrados));
+		//My_mesh->SetRelativeTransform(FTransform(FRotator(0, DireccionGrados, -90), FVector(-100, 0, 0)));
+
+	}
+
 }
 
 void AProyectilEnemigo::P_ECollected()
 {
 
-	GetWorld()->GetTimerManager().SetTimer(MyTimer, this, &AProyectilEnemigo::SpawnP_E, 2, false);
+	GetWorld()->GetTimerManager().SetTimer(MyTimer, this, &AProyectilEnemigo::SpawnP_E, 0.5, false);
 	
 	
 	CurrentP_E->Recarga.Unbind();
@@ -98,27 +139,33 @@ void AProyectilEnemigo::SpawnP_E()
 	UWorld* MyWorld = GetWorld();
 	if (MyWorld != nullptr)
 	{
+
+		
+
 		CurrentP_E = MyWorld->SpawnActor<AProyectilE>(AProyectilE::StaticClass(), GetTransform());
-		//CurrentP_E = MyWorld->SpawnActor<APickup>(APickup::StaticClass(), GetTransform());
-		//CurrentP_E->OnPickedUp.BindUObject(this, &AProyectilEnemigo::P_ECollected);
+		CurrentP_E->SetIdentifi(MyID);
+	
 		CurrentP_E->Recarga.BindUObject(this, &AProyectilEnemigo::P_ECollected);
 	}
 }
 
 void AProyectilEnemigo::ApuntarEnemigo(int a, int b)
 {
-	
-	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Red, FString::Printf(TEXT("%i = %i"), a, b));
-	
-	//int Cx, Cy,direc;
+	float ordenx= SpawnLocation->GetComponentLocation().X;
+	float ordeny= SpawnLocation->GetComponentLocation().Y;
+	//GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Red, FString::Printf(TEXT("%i = %i"), a, b));
+	//GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Red, FString::Printf(TEXT("ordenx =   %f "), ordenx));
+	//GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Red, FString::Printf(TEXT("oredeny =  %f "), ordeny));
+	float ordenX = a, ordenY = b;
+	// int Cx, Cy,direc;
 	//float magnitud;
 	//direc = FMath::Atan((a - MiPosi->GetActorLocation().X)/(b- MiPosi->GetActorLocation().Y));
-	//DireccionGrados = direc;
-	//magnitud = FMath::Sqrt(FMath::Pow((MiPosi->GetActorLocation().X - a) ,2) + FMath::Pow( (MiPosi->GetActorLocation().Y - b) ,2));
-	//Cx = magnitud * FMath::Cos(DireccionGrados);
-	//Cy= magnitud * FMath::Sin(DireccionGrados);
-	//Direccionx = Cx;
-	//Direcciony = Cy;
+	//DireccionGrados = FMath::Atan((a - MiPosi->GetActorLocation().X)/(b- MiPosi->GetActorLocation().Y));
+
+	//DireccionGrados = FMath::Atan((a - SpawnLocation->GetComponentLocation().X) / (b - SpawnLocation->GetComponentLocation().Y));
+	DireccionGrados =(FMath::Atan2((ordenX-ordenx),(ordenY-ordeny))) * 180 / 3.1415;
+
+
 
 	
 }

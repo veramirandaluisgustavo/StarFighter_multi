@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ProyectilE.h" 
-//#include "Pickup.h"
+#include "MoveP.h"
 #include "ProyectilEnemigo.generated.h"
 
 
@@ -17,6 +17,10 @@ class STARFIGHTER_API AProyectilEnemigo : public AActor
 public:
 	// Sets default values for this actor's properties
 	AProyectilEnemigo();
+
+
+	UPROPERTY()
+		int MyID;
 
 
 	AActor* MiPosi;
@@ -50,6 +54,15 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	FDelegateHandle MyObjetivo;
-	int DireccionGrados = 0;
-	int Direccionx, Direcciony;
+	float DireccionGrados ;
+	float Direccionx=0, Direcciony=0;
+	float magnitud;
+	float Cx, Cy;
+
+
+
+	float elapseseconds=0;
+
+	UMoveP* MoveRandom;
+
 };
