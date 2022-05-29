@@ -6,6 +6,10 @@
 #include "UObject/UObjectBaseUtility.h"
 #include "StarFighterGameModeBase.h"
 #include "Kismet/GamePlayStatics.h"
+#include "Engine/EngineTypes.h"
+#include"ProyectilEnemigo.h"
+#include "StarFighterGameModeBase.h"
+
 
 
 // Sets default values
@@ -20,6 +24,7 @@ AProyectilE::AProyectilE()
 
 	TriggerZone->SetBoxExtent(FVector(50, 50, 50));
 	identificadorP = 0;
+	
 
 
 
@@ -56,24 +61,27 @@ void AProyectilE::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+
+
+
 }
 
 void AProyectilE::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 
 	PlayerId=OtherActor->GetUniqueID();
-	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Black, FString::Printf(TEXT("Mi Player es = %i "), PlayerId));
+	//GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Black, FString::Printf(TEXT("Mi Player es = %i "), PlayerId));
 
-	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Red, FString::Printf(TEXT("Mi padre es=%i "),identificadorP ));
+	//GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Red, FString::Printf(TEXT("Mi padre es=%i "),identificadorP ));
 
 
 	Recarga.ExecuteIfBound();
 
 
-	/*UWorld* TheWorld = GetWorld();
+	UWorld* TheWorld = GetWorld();
 
-	if (TheWorld != nullptr)
-	{
+	//if (TheWorld != nullptr)
+	//{
 
 		AGameModeBase* GameMode = UGameplayStatics::GetGameMode(TheWorld);
 		AStarFighterGameModeBase* MyGameMode = Cast<AStarFighterGameModeBase>(GameMode);
@@ -83,6 +91,6 @@ void AProyectilE::NotifyActorBeginOverlap(AActor* OtherActor)
 
 		}
 
-	}*/
+	//}
 }
 

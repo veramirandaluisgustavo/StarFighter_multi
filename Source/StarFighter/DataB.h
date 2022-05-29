@@ -27,10 +27,13 @@ public:
 	TMap< FString,int> PuntosE;
 	UPROPERTY()
 		TMap<int,FString> NombresM;
+	UPROPERTY()
 	int AsigName;
 
 	UFUNCTION()
 		void RegistroE(int Id);
+	UFUNCTION()
+		void PuntosEnemigosTotales();
 
 
 protected:
@@ -41,5 +44,5 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	FString* NombresEP;
-
+	
 };

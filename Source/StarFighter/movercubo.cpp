@@ -15,6 +15,9 @@ Umovercubo::Umovercubo()
 
 	Destructordistacia=true;
 
+
+	tiempodes = 0;
+
 	// ...
 }
 

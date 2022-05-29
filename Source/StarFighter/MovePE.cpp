@@ -5,6 +5,8 @@
 #include "StarFighterGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
+
+
 // Sets default values for this component's properties
 UMovePE::UMovePE()
 {
@@ -15,7 +17,7 @@ UMovePE::UMovePE()
 
 
 	EnemigoX=0, EnemigoY=0;
-
+	tiempodes = 0;
 
 	velocidad = 10;
 	ejey = 10;
@@ -28,11 +30,6 @@ UMovePE::UMovePE()
 void UMovePE::BeginPlay()
 {
 
-	//calcula direccion enemigo
-
-	
-	
-
 
 	Super::BeginPlay();
 	TiempoE = GetWorld()->GetRealTimeSeconds();
@@ -43,6 +40,10 @@ void UMovePE::BeginPlay()
 
 	velocidad *= EnemigoX;
 	ejey *= EnemigoY;
+
+
+	
+
 
 	// ...
 
@@ -62,34 +63,60 @@ void UMovePE::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponen
 
 
 
-	/*if (GetWorld()->GetRealTimeSeconds() - TiempoE > 1.0f) {
+	if (GetWorld()->GetRealTimeSeconds() - TiempoE > 3.0f) {
 
-		TiempoE = GetWorld()->GetRealTimeSeconds();
-		int numerox = Numrand(1, 10);
-		if (numerox > 5) {
+		UWorld* TheWorld = GetWorld();
+		if (TheWorld != nullptr)
+		{
 
-			velocidad *= -1;
+			AGameModeBase* GameMode = UGameplayStatics::GetGameMode(TheWorld);
+			AStarFighterGameModeBase* MyGameMode = Cast<AStarFighterGameModeBase>(GameMode);
+			if (MyGameMode != nullptr) {
+
+				MyGameMode->MyDestructorProyectil.ExecuteIfBound();
+
+			}
+
 		}
-		int numeroy = Numrand(1, 10);
-		if (numeroy > 5) {
 
-			ejey *= -1;
-		}
-
-	}*/
+	}
 
 
 	//declarando limites
 	if (cubo->GetActorLocation().X > 900 || cubo->GetActorLocation().X < -900)
 	{
 
-		velocidad *= -1;
+		UWorld* TheWorld = GetWorld();
+		if (TheWorld != nullptr)
+		{
+
+			AGameModeBase* GameMode = UGameplayStatics::GetGameMode(TheWorld);
+			AStarFighterGameModeBase* MyGameMode = Cast<AStarFighterGameModeBase>(GameMode);
+			if (MyGameMode != nullptr) {
+
+				MyGameMode->MyDestructorProyectil.ExecuteIfBound();
+
+			}
+
+		}
 		//cubo->SetActorLocation(FVector(-440, -20, 70));
 	}
 	if (cubo->GetActorLocation().Y > 1400 || cubo->GetActorLocation().Y < -1100)
 	{
 
-		ejey *= -1;
+		UWorld* TheWorld = GetWorld();
+		if (TheWorld != nullptr)
+		{
+
+			AGameModeBase* GameMode = UGameplayStatics::GetGameMode(TheWorld);
+			AStarFighterGameModeBase* MyGameMode = Cast<AStarFighterGameModeBase>(GameMode);
+			if (MyGameMode != nullptr) {
+
+				MyGameMode->MyDestructorProyectil.ExecuteIfBound();
+
+			}
+
+		}
 		//cubo->SetActorLocation(FVector(-440, -20, 70));
 	}
 

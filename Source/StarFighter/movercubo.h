@@ -46,5 +46,5 @@ public:
 	float TiempoE;
 	bool Destructordistacia;
 	
-	
+	float tiempodes;
 };

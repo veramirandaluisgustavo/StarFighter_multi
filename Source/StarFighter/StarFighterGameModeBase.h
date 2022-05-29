@@ -34,6 +34,7 @@ public:
 	FDelegateInventory MyInventoryDelegate;
 	//FDelegateInventory MyPrueva;
 	FDelegateDestructor MyDestructorDelegate;
+	FDelegateDestructor MyDestructorProyectil;
 	FDelegateparamdata EnemiGetId;
 	FDelegatedata MyGetID;
 	FDelegateEnemiRegistro MyGetIDRegister;

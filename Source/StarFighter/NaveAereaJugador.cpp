@@ -86,11 +86,12 @@ ANaveAereaJugador::ANaveAereaJugador()
 void ANaveAereaJugador::BeginPlay()
 {
 	Super::BeginPlay();
-	UWorld* TheWorld = GetWorld();
+	
 	NaveJ = GetOwner();
 
 	PlayerID = GetUniqueID();
 	
+	UWorld* TheWorld = GetWorld();
 
 	if (TheWorld != nullptr)
 	{
@@ -299,7 +300,7 @@ void ANaveAereaJugador::NotifyHit(class UPrimitiveComponent* MyComp, AActor* Oth
 void ANaveAereaJugador::pruevafuncion(FString dato)
 {
 
-	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Red, FString::Printf(TEXT("%s "), *dato));
+	//GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Red, FString::Printf(TEXT("%s "), *dato));
 
 }
 

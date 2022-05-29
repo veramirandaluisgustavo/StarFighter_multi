@@ -49,7 +49,8 @@ public:
 
 	void CalcularDir();
 
-
+	
+	float tiempodes;
 
 	float EnemigoY, EnemigoX;
 

@@ -46,23 +46,47 @@ void ADataB::BeginPlay()
 
 	}
 
-
-
+	FTimerHandle PuntosEnemigoTime;
+	GetWorldTimerManager().SetTimer(PuntosEnemigoTime, this, &ADataB::PuntosEnemigosTotales, 20);
 }
 
 void ADataB::RegistroE(int Id)
 {
-	if (!NombresM.Contains(Id)) {
-		if (AsigName > 6) {
+
+	//GEngine->AddOnScreenDebugMessage(-1, 17, FColor::Black, FString::Printf(TEXT("Resgintro real === %i  "), Id));
+	bool registradoR= NombresM.Contains(Id);
+	
+	if (!registradoR)
+	{
+		if (AsigName <6) {
 
 			NombresM.Add(Id, NombresEP[AsigName]);
 			PuntosE.Add(NombresEP[AsigName], 0);
-				AsigName++;
+
+			//GEngine->AddOnScreenDebugMessage(-1, 17, FColor::Black, FString::Printf(TEXT("registrado = %i "),PuntosE[*NombresEP[AsigName]]));
+			AsigName += 1;
+
 		}
 
 		
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 17, FColor::Black, FString::Printf(TEXT("%i "), 666));
+	
+}
+
+void ADataB::PuntosEnemigosTotales()
+{
+	for (int i=0; i < AsigName; i++) {
+
+
+		GEngine->AddOnScreenDebugMessage(-1, 12, FColor::Green, FString::Printf(TEXT("La nave de %s tiene %i puntos puntos totales"), *NombresEP[i],PuntosE[*NombresEP[i]]));
+
+	}
+
+
+	
+	
+
+
 }
 
 // Called every frame
@@ -88,14 +112,14 @@ void ADataB::DataIdE(int NaveEneId, int JugadorId)
 	int temppuntos=0;
 
 
-	GEngine->AddOnScreenDebugMessage(-1, 15, FColor::Black, FString::Printf(TEXT("Player= %i "), IDPlayer));
-	GEngine->AddOnScreenDebugMessage(-1, 6, FColor::Purple, FString::Printf(TEXT("OverlapOthre= %i "), JugadorId));
+	//GEngine->AddOnScreenDebugMessage(-1, 15, FColor::Black, FString::Printf(TEXT("Player= %i "), IDPlayer));
+	//GEngine->AddOnScreenDebugMessage(-1, 6, FColor::Purple, FString::Printf(TEXT("OverlapOthre= %i "), JugadorId));
 	if (IDPlayer == JugadorId) {
 
 		templlave = NombresM[NaveEneId];
 		temppuntos = PuntosE[templlave]+1;
 		PuntosE.Add(templlave, temppuntos);
-		GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Black, FString::Printf(TEXT(" %i "), temppuntos));
+		GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Black, FString::Printf(TEXT("La nave de %s tiene %i puntos"),*templlave ,temppuntos));
 
 	}
 
