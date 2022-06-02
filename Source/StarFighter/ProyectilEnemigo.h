@@ -64,5 +64,7 @@ public:
 	float elapseseconds=0;
 
 	UMoveP* MoveRandom;
-
+	UWorld* MyWorld;
+	TArray<AProyectilE*> ArrayProyectiles;
+	int contador;
 };

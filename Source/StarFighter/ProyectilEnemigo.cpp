@@ -41,6 +41,8 @@ AProyectilEnemigo::AProyectilEnemigo()
 	DireccionGrados=0;
 	MyID = 0;
 	SetActorEnableCollision(false);
+	contador = 0;
+	
 	
 }
 
@@ -60,9 +62,9 @@ void AProyectilEnemigo::BeginPlay()
 
 	SpawnP_E();
 	
-	CurrentP_E->SetIdentifi(MyID);
+	//CurrentP_E->SetIdentifi(MyID);
 
-	P_ECollected();
+	//P_ECollected();
 
 
 
@@ -116,28 +118,31 @@ void AProyectilEnemigo::Tick(float DeltaTime)
 	
 	My_mesh->SetRelativeTransform(FTransform(FRotator(0, (DireccionGrados*-1)+180, -90), FVector(100,100, 100)));
 
+	
+	
 	//GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Red, FString::Printf(TEXT("%i "), DireccionGrados));
 
-	//elapseseconds += (DeltaTime * 60);
-	//if (elapseseconds > 180)
-	//{
-	//	elapseseconds -= 180;
+	elapseseconds += (DeltaTime * 60);
+	if (elapseseconds > 60)
+	{
+		elapseseconds -= 60;
+		SpawnP_E();
 
 	//	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Blue, FString::Printf(TEXT("%f "), DireccionGrados));
 	//	//My_mesh->SetRelativeTransform(FTransform(FRotator(0, DireccionGrados, -90), FVector(-100, 0, 0)));
 
-	//}
+	}
 
 }
 
 void AProyectilEnemigo::P_ECollected()
 {
 
-	GetWorld()->GetTimerManager().SetTimer(MyTimer, this, &AProyectilEnemigo::SpawnP_E, 0.5, false);
-	
-	
-	CurrentP_E->Recarga.Unbind();
-	CurrentP_E->Destroy();
+	//GetWorld()->GetTimerManager().SetTimer(MyTimer, this, &AProyectilEnemigo::SpawnP_E, 0.5, false);
+	//
+	//
+	//CurrentP_E->Recarga.Unbind();
+	//CurrentP_E->Destroy();
 
 }
 
@@ -146,16 +151,16 @@ void AProyectilEnemigo::P_ECollected()
 
 void AProyectilEnemigo::SpawnP_E()
 {
-	UWorld* MyWorld = GetWorld();
+	 MyWorld = GetWorld();
 	if (MyWorld != nullptr)
 	{
 
 		
 
-		CurrentP_E = MyWorld->SpawnActor<AProyectilE>(AProyectilE::StaticClass(), GetTransform());
-		CurrentP_E->SetIdentifi(MyID);
+		ArrayProyectiles.Emplace(MyWorld->SpawnActor<AProyectilE>(AProyectilE::StaticClass(), GetTransform()));
+		//ArrayProyectiles[contador]->SetIdentifi(MyID);
 	
-		CurrentP_E->Recarga.BindUObject(this, &AProyectilEnemigo::P_ECollected);
+		//CurrentP_E->Recarga.BindUObject(this, &AProyectilEnemigo::P_ECollected);
 	}
 }
 
